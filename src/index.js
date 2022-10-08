@@ -1,0 +1,5 @@
+const str =require('./first.js')
+const str2 =require('./second.js')
+console.log(str)
+console.log(str2)
+console.log("hello ax")
