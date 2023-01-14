@@ -1,5 +1,5 @@
-const str =require('./first.js')
-const str2 =require('./second.js')
-console.log(str)
-console.log(str2)
-console.log("hello ax")
+import './css.css'
+import './less.less'
+import './sass.scss'
+import './font/iconfont.css'
+;console.log('webpack init222')
