@@ -1,3 +1,14 @@
+# main分支是源码解析部分
+# master2开始是webpack 学习部分
+
+
+
+## 一步步的配置
+master2->master3->master4->master5
+个人笔记：https://note.youdao.com/s/AJBGRcuw
+
+
+
 # html文件 运行查看/dist/main.js 打包效果
 ```
 使用的库：
