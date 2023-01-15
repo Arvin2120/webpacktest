@@ -1,6 +1,11 @@
 // resolve 用来拼接绝对路径的方法
 const {resolve} = require('path')
-const htmlwebpackPlugin = require('html-webpack-plugin')
+const HtmlwebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CssMinimizerWebpackPlugin = require('css-minimizer-webpack-plugin')
+// 设置node 环境变量
+process.env.NODE_ENV = 'development'
+// process.env.NODE_ENV = 'production'
 module.exports = {
     // webpack配置
     // 入口
@@ -22,9 +27,25 @@ module.exports = {
                 // 从下到上执行
                 use:[
                     // 创建style标签，将js中的样式资源插入添加到head中生效
-                    'style-loader',
+                    // 'style-loader',
+                    // 取代style-loader 提前js中的css到单独文件
+                    MiniCssExtractPlugin.loader,
                     // 将css文件变成 commonjs模块加载js中，里面内容是样式字符串
-                    'css-loader'
+                    'css-loader',
+                    // 帮postcss找到package.json中browserslist里面的配置，通过配置加载指定的css兼容样式
+                    // 没配置写法(推荐，然后再建一个配置postcss.conﬁg.js文件设置)
+                    'postcss-loader'
+                    // // 有配置写法
+                    // {
+                    //     loader:'postcss-loader',
+                    //     options:{
+                    //         ident:'postcss',
+                    //         plugins:()=>[
+                    //             // postcss的插件
+                    //             require('postcss-preset-env')()
+                    //         ]
+                    //     }
+                    // }
                 ]
             },
             {
@@ -33,8 +54,10 @@ module.exports = {
                 // 使用哪些loader进行处理
                 // 从下到上执行
                 use:[
-                    'style-loader',
+                    // 'style-loader',
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
+                    'postcss-loader',
                     'less-loader'
                 ]
             },
@@ -43,8 +66,10 @@ module.exports = {
                 test:/\.s[ca]ss$/,
                 // 从下到上执行
                 use:[
-                    'style-loader',
+                    // 'style-loader',
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
+                    'postcss-loader',
                     'sass-loader'
                 ]
             },
@@ -95,12 +120,17 @@ module.exports = {
     },
     // plugins配置
     plugins:[
-        new htmlwebpackPlugin({
+        new HtmlwebpackPlugin({
             template:'./src/index.html'
-        })
+        }),
+        new MiniCssExtractPlugin({
+            filename: 'build.css'
+        }),
+        // 压缩css
+        new CssMinimizerWebpackPlugin()
     ],
-    mode:'development',
-    // mode:'production'
+    // mode:'development',
+    mode:'production',
     // 启动 devServer指令为：webpack-dev-server
     // 特点：只会在内存中编译打包，不会有任何输出
     devServer:{
